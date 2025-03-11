@@ -1,6 +1,7 @@
 # Simple Web Terminal
 
 [![Version 0.1.0](https://img.shields.io/badge/Version-0.1.0-blue.svg)](https://github.com/lvcabral/terminal/releases/tag/v0.1.0)
+[![NPM Version](https://img.shields.io/npm/v/%40lvcabral%2Fterminal)](https://www.npmjs.com/package/@lvcabral/terminal)
 [![GitHub](https://img.shields.io/github/license/lvcabral/terminal)](./LICENSE)
 
 > A simple and lightweight Javascript web browser terminal
