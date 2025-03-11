@@ -13,17 +13,17 @@
         padding: 0;
       }
 
-      #vanilla-terminal {
+      #web-terminal {
         width: 100vw;
         height: 100vh;
       }
     </style>
   </head>
   <body>
-    <div id="vanilla-terminal"></div>
-    <script src="./vanilla-terminal.js"></script>
+    <div id="web-terminal"></div>
+    <script src="./web-terminal.js"></script>
     <script>
-      const term = new VanillaTerminal({
+      const term = new WebTerminal({
         commands: {
           switch: (terminal) => {
             terminal.output('This is a custom command of <b>web terminal<b>.')

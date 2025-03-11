@@ -11,28 +11,28 @@ Web apps are great. But sometimes instead of all the double-clicks, mouse pointe
 
 ## How to use
 
-Include `vanilla-terminal.js` in your HTML:
+Include `web-terminal.js` in your HTML:
 
 ```html
-<script src="vanilla-terminal.min.js"></script>
+<script src="web-terminal.min.js"></script>
 ```
 
 Define an HTML div tag where the terminal will be contained:
 
 ```html
-<div id="vanilla-terminal"></div>
+<div id="web-terminal"></div>
 ```
 
 Create a new terminal instance and convert the DOM element into a live terminal.
 
 ```js
-const terminal = new VanillaTerminal();
+const terminal = new WebTerminal();
 ```
 
 If you want use another DOM element as container just set the property `container`:
 
 ```js
-const terminal = new VanillaTerminal({ container: 'my-vanilla-container' });
+const terminal = new WebTerminal({ container: 'my-terminal-container' });
 ```
 
 ### Add your own commands
@@ -51,7 +51,7 @@ const commands = {
   },
 };
 
-const terminal = new VanillaTerminal({ commands });
+const terminal = new WebTerminal({ commands });
 ```
 
 Now in your terminal could type your new commands:
@@ -77,11 +77,11 @@ terminal.clear();
 ### output
 
 ```js
-terminal.output('I like vanilla.');
+terminal.output('I like ice-cream.');
 ```
 
 ```bash
-I like vanilla.
+I like ice-cream.
 >
 ```
 
@@ -110,11 +110,11 @@ terminal.onInput((command, parameters) => {
 ### setPrompt
 
 ```js
-terminal.setPrompt('soyjavi @ moon');
+terminal.setPrompt('user @ web');
 ```
 
 ```bash
-soyjavi @ moon >
+user @ web >
 ```
 
 ## License

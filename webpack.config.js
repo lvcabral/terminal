@@ -5,7 +5,7 @@ module.exports = {
   entry: ['./src'],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'vanilla-terminal.js',
+    filename: 'web-terminal.js',
     libraryTarget: 'umd',
   },
   module: {

@@ -1,1 +1,1 @@
-export { default } from './VanillaTerminal';
+export { default } from './WebTerminal';

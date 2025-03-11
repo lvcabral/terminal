@@ -1,16 +1,16 @@
 /* global MutationObserver */
 
 import { cloneCommandNode, COMMANDS, markup } from './modules';
-import style from './VanillaTerminal.css'; // eslint-disable-line
+import style from './WebTerminal.css'; // eslint-disable-line
 
-const KEY = 'VanillaTerm';
+const KEY = 'WebTerm';
 
 const { addEventListener, localStorage } = window;
 
 class Terminal {
   constructor(props = {}) {
     const {
-      container = 'vanilla-terminal',
+      container = 'web-terminal',
       commands = {},
       welcome = 'Welcome to the simple <a href="">Web Terminal</a>.',
       prompt = '',
@@ -191,6 +191,6 @@ class Terminal {
   }
 }
 
-if (window) window.VanillaTerminal = Terminal;
+if (window) window.WebTerminal = Terminal;
 
 export default Terminal;

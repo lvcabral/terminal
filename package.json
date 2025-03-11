@@ -14,8 +14,8 @@
     "url": "https://github.com/lvcabral/terminal.git"
   },
   "license": "MIT",
-  "main": "./dist/vanilla-terminal.js",
-  "bin": "./dist/vanilla-terminal.js",
+  "main": "./dist/web-terminal.js",
+  "bin": "./dist/web-terminal.js",
   "homepage": "https://github.com/lvcabral/terminal",
   "bugs": "https://github.com/lvcabral/terminal/issues",
   "devDependencies": {

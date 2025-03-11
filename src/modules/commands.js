@@ -2,7 +2,7 @@ import PKG from '../../package.json';
 import HELP from './help';
 
 const { localStorage } = window;
-const KEY = 'VanillaTerm';
+const KEY = 'WebTerm';
 
 export default {
   clear: terminal => terminal.clear(),
