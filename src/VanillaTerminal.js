@@ -10,15 +10,19 @@ class Terminal {
     const {
       container = 'vanilla-terminal',
       commands = {},
-      welcome = 'Welcome to <a href="">Vanilla</a> terminal.',
+      welcome = 'Welcome to the simple <a href="">Web Terminal</a>.',
       prompt = '',
       separator = '&gt;',
+      ignoreBadCommand = false,
+      autoFocus = true,
     } = props;
-    this.commands = Object.assign({}, commands, COMMANDS);
+    this.commands = Object.assign({}, COMMANDS, commands);
     this.history = localStorage[KEY] ? JSON.parse(localStorage[KEY]) : [];
     this.historyCursor = this.history.length;
     this.welcome = welcome;
     this.shell = { prompt, separator };
+    this.ignoreBadCommand = ignoreBadCommand;
+    this.autoFocus = autoFocus;
 
     const el = document.getElementById(container);
     if (el) {
@@ -49,22 +53,25 @@ class Terminal {
   }
 
   addListeners = () => {
-    const { DOM } = this;
+    const { DOM, autoFocus } = this;
     DOM.output.addEventListener('DOMSubtreeModified', () => {
       setTimeout(() => DOM.input.scrollIntoView(), 10);
     }, false);
 
-    addEventListener('click', () => DOM.input.focus(), false);
     DOM.output.addEventListener('click', event => event.stopPropagation(), false);
     DOM.input.addEventListener('keyup', this.onKeyUp, false);
     DOM.input.addEventListener('keydown', this.onKeyDown, false);
     DOM.command.addEventListener('click', () => DOM.input.focus(), false);
 
-    addEventListener('keyup', (event) => {
-      DOM.input.focus();
-      event.stopPropagation();
-      event.preventDefault();
-    }, false);
+    if (autoFocus) {
+      addEventListener('click', () => DOM.input.focus(), false);
+
+      addEventListener('keyup', (event) => {
+        DOM.input.focus();
+        event.stopPropagation();
+        event.preventDefault();
+      }, false);
+    }
   }
 
   onKeyUp = (event) => {
@@ -113,13 +120,17 @@ class Terminal {
     DOM.input.value = '';
 
     // Dispatch command
+    let handled = false;
     if (Object.keys(commands).includes(command)) {
       const callback = commands[command];
-      if (callback) callback(this, parameters);
-      if (onInputCallback) onInputCallback(command, parameters);
-    } else {
+      if (callback) {
+        callback(this, parameters);
+        handled = true;
+      }
+    } else if (!this.ignoreBadCommand) {
       this.output(`<u>${command}</u>: command not found.`);
     }
+    if (onInputCallback) onInputCallback(command, parameters, handled);
   }
 
   resetCommand = () => {
@@ -131,9 +142,11 @@ class Terminal {
     if (DOM.input.scrollIntoView) DOM.input.scrollIntoView();
   }
 
-
   clear() {
     this.DOM.output.innerHTML = '';
+    if (!this.state.idle) {
+      this.DOM.input.focus();
+    }
     this.resetCommand();
   }
 
@@ -144,7 +157,7 @@ class Terminal {
     DOM.prompt.innerHTML = '<div class="spinner"></div>';
   }
 
-  prompt(prompt, callback = () => {}) {
+  prompt(prompt, callback = () => { }) {
     this.state.prompt = true;
     this.onAskCallback = callback;
     this.DOM.prompt.innerHTML = `${prompt}:`;
