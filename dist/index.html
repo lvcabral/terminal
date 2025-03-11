@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>🍦terminal</title>
-    <meta name="description" content="🍦A simple and lightweight Javascript web browser terminal">
+    <title>terminal</title>
+    <meta name="description" content="A simple and lightweight Javascript web browser terminal">
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000">
@@ -13,21 +13,21 @@
         padding: 0;
       }
 
-      #vanilla-terminal {
+      #web-terminal {
         width: 100vw;
         height: 100vh;
       }
     </style>
   </head>
   <body>
-    <div id="vanilla-terminal"></div>
-    <script src="./vanilla-terminal.js"></script>
+    <div id="web-terminal"></div>
+    <script src="./web-terminal.js"></script>
     <script>
-      const term = new VanillaTerminal({
+      const term = new WebTerminal({
         commands: {
-          flavour: (terminal) => {
-            terminal.output('There is only one flavour for your favorite🍦and it is <b>vanilla<b>.')
-            terminal.setPrompt('@soyjavi <small>❤️</small> <u>vanilla</u> ');
+          switch: (terminal) => {
+            terminal.output('This is a custom command of <b>web terminal<b>.')
+            terminal.setPrompt('Custom Prompt &gt; ');
           },
 
           async: (terminal) => {
@@ -46,8 +46,8 @@
         separator: '$',
       });
 
-      term.onInput((command, parameters) => {
-        console.log('⚡️onInput', command, parameters);
+      term.onInput((command, parameters, handled) => {
+        console.log('⚡️onInput', command, parameters, handled);
       });
 
       term.prompt('Your name', (name) => {

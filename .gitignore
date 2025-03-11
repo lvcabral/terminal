@@ -15,3 +15,7 @@ node_modules/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# local files
+out/
+.DS_Store

@@ -1,18 +1,24 @@
-import VanillaTerminal from './VanillaTerminal';
+import WebTerminal from './WebTerminal';
 
-describe('VanillaTerminal', () => {
+global.MutationObserver = class {
+  constructor(callback) {}
+  disconnect() {}
+  observe(element, initObject) {}
+};
+
+describe('WebTerminal', () => {
   beforeEach(() => {
-    document.body.innerHTML = '<div id="vanilla-terminal"></div>';
+    document.body.innerHTML = '<div id="web-terminal"></div>';
   });
 
   it('default', () => {
-    expect(VanillaTerminal).toBeDefined();
+    expect(WebTerminal).toBeDefined();
 
-    expect(typeof VanillaTerminal).toEqual('function');
+    expect(typeof WebTerminal).toEqual('function');
   });
 
   it('when instance', () => {
-    const term = new VanillaTerminal();
+    const term = new WebTerminal();
 
     expect(term).toBeDefined();
     expect(term.clear).toBeDefined();
@@ -22,14 +28,14 @@ describe('VanillaTerminal', () => {
   });
 
   it('when clear()', () => {
-    const term = new VanillaTerminal();
+    const term = new WebTerminal();
 
     term.clear();
     expect(document.querySelector('output').innerHTML).toEqual('');
   });
 
   it('when idle()', () => {
-    const term = new VanillaTerminal();
+    const term = new WebTerminal();
 
     term.idle();
     expect(document.querySelector('.command .prompt').innerHTML).toEqual('<div class="spinner"></div>');
@@ -37,7 +43,7 @@ describe('VanillaTerminal', () => {
 
   it('when onInput()', () => {
     const mockCallback = jest.fn();
-    const term = new VanillaTerminal();
+    const term = new WebTerminal();
 
     term.onInput(mockCallback);
     mockCallback('hello');
@@ -46,35 +52,35 @@ describe('VanillaTerminal', () => {
   });
 
   it('when output()', () => {
-    const term = new VanillaTerminal();
+    const term = new WebTerminal();
 
     term.output('Hello World');
     expect(document.querySelector('output span:last-child').innerHTML).toEqual('Hello World');
   });
 
   it('when prompt()', () => {
-    const term = new VanillaTerminal();
+    const term = new WebTerminal();
 
     term.prompt('Your name');
     expect(document.querySelector('.command .prompt').innerHTML).toEqual('Your name:');
   });
 
   it('when setPrompt()', () => {
-    const term = new VanillaTerminal();
+    const term = new WebTerminal();
 
     term.setPrompt('Hello World ');
     expect(document.querySelector('.command .prompt').innerHTML).toEqual('Hello World &gt;');
   });
 
   it('when set another container to instance', () => {
-    document.body.innerHTML = '<div id="vanilla-terminal-jest"></div>';
-    const term = new VanillaTerminal({ container: 'vanilla-terminal-jest' });
+    document.body.innerHTML = '<div id="web-terminal-jest"></div>';
+    const term = new WebTerminal({ container: 'web-terminal-jest' });
 
     expect(term).toBeDefined();
   });
 
   it('when customized instance', () => {
-    const term = new VanillaTerminal({
+    const term = new WebTerminal({
       welcome: 'Welcome JEST',
       prompt: 'Testing with JEST ',
       separator: '$',
@@ -86,7 +92,7 @@ describe('VanillaTerminal', () => {
   });
 
   it('when add new commands', () => {
-    const term = new VanillaTerminal({
+    const term = new WebTerminal({
       commands: {
         flavour: (terminal) => {
           terminal.output('There is only one flavor and it is vanilla.')

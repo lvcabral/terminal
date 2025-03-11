@@ -2,7 +2,7 @@ import PKG from '../../package.json';
 import HELP from './help';
 
 const { localStorage } = window;
-const KEY = 'VanillaTerm';
+const KEY = 'WebTerm';
 
 export default {
   clear: terminal => terminal.clear(),
@@ -17,7 +17,7 @@ export default {
     }
   },
 
-  version: terminal => terminal.output(`Vanilla Terminal v${PKG.version}`),
+  version: terminal => terminal.output(`Simple Web Terminal v${PKG.version}`),
 
   wipe: (terminal) => {
     terminal.prompt('Are you sure remove all your commands history? Y/N', (value) => {
