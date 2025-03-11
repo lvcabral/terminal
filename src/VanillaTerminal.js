@@ -1,3 +1,5 @@
+/* global MutationObserver */
+
 import { cloneCommandNode, COMMANDS, markup } from './modules';
 import style from './VanillaTerminal.css'; // eslint-disable-line
 

@@ -1,5 +1,11 @@
 import VanillaTerminal from './VanillaTerminal';
 
+global.MutationObserver = class {
+  constructor(callback) {}
+  disconnect() {}
+  observe(element, initObject) {}
+};
+
 describe('VanillaTerminal', () => {
   beforeEach(() => {
     document.body.innerHTML = '<div id="vanilla-terminal"></div>';
