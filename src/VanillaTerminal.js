@@ -54,9 +54,14 @@ class Terminal {
 
   addListeners = () => {
     const { DOM, autoFocus } = this;
-    DOM.output.addEventListener('DOMSubtreeModified', () => {
+
+    // Create a MutationObserver to observe changes in the output element
+    const observer = new MutationObserver(() => {
       setTimeout(() => DOM.input.scrollIntoView(), 10);
-    }, false);
+    });
+
+    // Start observing the output element for child list changes
+    observer.observe(DOM.output, { childList: true, subtree: true });
 
     DOM.output.addEventListener('click', event => event.stopPropagation(), false);
     DOM.input.addEventListener('keyup', this.onKeyUp, false);
