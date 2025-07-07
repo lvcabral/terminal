@@ -4,13 +4,78 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ANSI Color Classes - Theme-aware colors for better visibility */
+
+/* Dark theme ANSI colors (default) */
+.WebTerm output .color-black { color: #2c3e50 !important; }
+.WebTerm output .color-red { color: #e74c3c !important; }
+.WebTerm output .color-green { color: #2ecc71 !important; }
+.WebTerm output .color-yellow { color: #f1c40f !important; }
+.WebTerm output .color-blue { color: #3498db !important; }
+.WebTerm output .color-magenta { color: #9b59b6 !important; }
+.WebTerm output .color-cyan { color: #1abc9c !important; }
+.WebTerm output .color-white { color: #ecf0f1 !important; }
+.WebTerm output .color-bright-black { color: #7f8c8d !important; }
+.WebTerm output .color-bright-red { color: #ff6b6b !important; }
+.WebTerm output .color-bright-green { color: #51cf66 !important; }
+.WebTerm output .color-bright-yellow { color: #ffd93d !important; }
+.WebTerm output .color-bright-blue { color: #74c0fc !important; }
+.WebTerm output .color-bright-magenta { color: #da77f2 !important; }
+.WebTerm output .color-bright-cyan { color: #3bc9db !important; }
+.WebTerm output .color-bright-white { color: #ffffff !important; }
+
+/* Light theme ANSI colors - darker, more readable on light background */
+.WebTerm.theme-light output .color-black { color: #2c3e50 !important; }
+.WebTerm.theme-light output .color-red { color: #c0392b !important; }
+.WebTerm.theme-light output .color-green { color: #27ae60 !important; }
+.WebTerm.theme-light output .color-yellow { color: #d68910 !important; }
+.WebTerm.theme-light output .color-blue { color: #2980b9 !important; }
+.WebTerm.theme-light output .color-magenta { color: #8e44ad !important; }
+.WebTerm.theme-light output .color-cyan { color: #17a2b8 !important; }
+.WebTerm.theme-light output .color-white { color: #f8f9fa !important; }
+.WebTerm.theme-light output .color-bright-black { color: #6c757d !important; }
+.WebTerm.theme-light output .color-bright-red { color: #dc3545 !important; }
+.WebTerm.theme-light output .color-bright-green { color: #28a745 !important; }
+.WebTerm.theme-light output .color-bright-yellow { color: #ffc107 !important; }
+.WebTerm.theme-light output .color-bright-blue { color: #007bff !important; }
+.WebTerm.theme-light output .color-bright-magenta { color: #6f42c1 !important; }
+.WebTerm.theme-light output .color-bright-cyan { color: #20c997 !important; }
+.WebTerm.theme-light output .color-bright-white { color: #ffffff !important; }
+
 .WebTerm {
-  background-color: #222222;
-  color: white;
   font-family: "Inconsolata", "Courier New", Courier, monospace;
-  font-weight: bold;
   overflow: hidden;
   padding: 0.75em 1em;
+}
+
+/* Default dark theme */
+.WebTerm, .WebTerm.theme-dark {
+  background-color: #222222;
+  color: white;
+}
+
+.WebTerm.theme-dark .container ::selection {
+  background-color: #1e496c;
+  text-shadow: none !important;
+}
+
+.WebTerm.theme-dark output span {
+  color: #dddddd;
+}
+
+/* Light theme */
+.WebTerm.theme-light {
+  background-color: #f8f9fa;
+  color: #2c3e50;
+}
+
+.WebTerm.theme-light .container ::selection {
+  background-color: #bde4ff;
+  text-shadow: none !important;
+}
+
+.WebTerm.theme-light output span:not([class*="color-"]):not([class*="bg-"]) {
+  color: #2c3e50;
 }
 
 .WebTerm .container {
@@ -18,11 +83,60 @@
   height: 100%;
   overflow-y: scroll;
 }
-.WebTerm .container ::selection {
-  background-color: #1e496c;
-  text-shadow: none !important;
+
+/* Scrollbar styling for WebKit browsers (Chrome, Safari, Edge) */
+.WebTerm .container::-webkit-scrollbar {
+  width: 12px;
 }
 
+/* Dark theme scrollbar (default) */
+.WebTerm .container::-webkit-scrollbar-track,
+.WebTerm.theme-dark .container::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 6px;
+}
+
+.WebTerm .container::-webkit-scrollbar-thumb,
+.WebTerm.theme-dark .container::-webkit-scrollbar-thumb {
+  background: #444444;
+  border-radius: 6px;
+  border: 2px solid #1a1a1a;
+}
+
+.WebTerm .container::-webkit-scrollbar-thumb:hover,
+.WebTerm.theme-dark .container::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+/* Light theme scrollbar */
+.WebTerm.theme-light .container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+.WebTerm.theme-light .container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 6px;
+  border: 2px solid #f1f1f1;
+}
+
+.WebTerm.theme-light .container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Firefox scrollbar styling */
+.WebTerm .container {
+  scrollbar-width: thin;
+}
+
+.WebTerm .container,
+.WebTerm.theme-dark .container {
+  scrollbar-color: #444444 #1a1a1a;
+}
+
+.WebTerm.theme-light .container {
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
 .WebTerm output {
   clear: both;
   line-height: 1.25em;
@@ -39,13 +153,32 @@
 .WebTerm output span {
   display: block;
   font-weight: normal;
-  color: #dddddd;
+}
+.WebTerm output span span {
+  display: inline;
+}
+
+/* Ensure colored spans don't break lines unnecessarily */
+.WebTerm span[style*="color"] {
+  display: inline;
 }
 
 .WebTerm .prompt,
 .WebTerm a {
-  color: #449dff;
   font-weight: bold;
+}
+
+/* Theme-specific prompt colors */
+.WebTerm.theme-light .prompt,
+.WebTerm.theme-light a {
+  color: #2c3e50;
+}
+
+.WebTerm.theme-dark .prompt,
+.WebTerm.theme-dark a,
+.WebTerm .prompt,  /* Default fallback */
+.WebTerm a {
+  color: #449dff;
 }
 
 .WebTerm .prompt {
@@ -63,8 +196,17 @@
 }
 
 .WebTerm .command.input .prompt {
-  color: white;
   font-weight: normal;
+}
+
+/* Theme-specific input prompt colors */
+.WebTerm.theme-light .command.input .prompt {
+  color: #2c3e50;
+}
+
+.WebTerm.theme-dark .command.input .prompt,
+.WebTerm .command.input .prompt {  /* Default fallback */
+  color: white;
 }
 
 .WebTerm .command.idle .input {
@@ -131,3 +273,28 @@
     content: "⠏";
   }
 }
+
+/* Background color classes - with higher specificity to override theme colors */
+.WebTerm output .bg-black { background-color: #000000; }
+.WebTerm output .bg-red { background-color: #ff0000; }
+.WebTerm output .bg-green { background-color: #00ff00; }
+.WebTerm output .bg-yellow { background-color: #ffff00; }
+.WebTerm output .bg-blue { background-color: #0000ff; }
+.WebTerm output .bg-magenta { background-color: #ff00ff; }
+.WebTerm output .bg-cyan { background-color: #00ffff; }
+.WebTerm output .bg-white { background-color: #ffffff; }
+.WebTerm output .bg-bright-black { background-color: #808080; }
+.WebTerm output .bg-bright-red { background-color: #ff8080; }
+.WebTerm output .bg-bright-green { background-color: #80ff80; }
+.WebTerm output .bg-bright-yellow { background-color: #ffff80; }
+.WebTerm output .bg-bright-blue { background-color: #8080ff; }
+.WebTerm output .bg-bright-magenta { background-color: #ff80ff; }
+.WebTerm output .bg-bright-cyan { background-color: #80ffff; }
+.WebTerm output .bg-bright-white { background-color: #ffffff; }
+
+/* Text styling classes - with higher specificity to override theme styles */
+.WebTerm output .bold { font-weight: bold; }
+.WebTerm output .dim { opacity: 0.5; }
+.WebTerm output .italic { font-style: italic; }
+.WebTerm output .underline { text-decoration: underline; }
+.WebTerm output .strikethrough { text-decoration: line-through; }

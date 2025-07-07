@@ -1,6 +1,18 @@
 /* global MutationObserver */
 
-import { cloneCommandNode, COMMANDS, markup } from './modules';
+import { 
+  cloneCommandNode, 
+  COMMANDS, 
+  markup, 
+  ansiToHtml, 
+  colors, 
+  colorize, 
+  contextualColorize, 
+  colorizeMessageType, 
+  colorizeJSON, 
+  colorizeCommandOutput,
+  COLOR_THEMES 
+} from './modules';
 import style from './WebTerminal.css'; // eslint-disable-line
 
 const KEY = 'WebTerm';
@@ -17,6 +29,8 @@ class Terminal {
       separator = '&gt;',
       ignoreBadCommand = false,
       autoFocus = true,
+      colors: contextualColors = true,
+      colorTheme = 'light',
     } = props;
     this.commands = Object.assign({}, COMMANDS, commands);
     this.history = localStorage[KEY] ? JSON.parse(localStorage[KEY]) : [];
@@ -25,6 +39,10 @@ class Terminal {
     this.shell = { prompt, separator };
     this.ignoreBadCommand = ignoreBadCommand;
     this.autoFocus = autoFocus;
+    this.contextualColors = contextualColors;
+    this.colorTheme = colorTheme;
+    this.colors = colors; // Expose color utility functions
+    this.colorize = colorize; // Expose colorize function
 
     const el = document.getElementById(container);
     if (el) {
@@ -41,6 +59,7 @@ class Terminal {
 
   cacheDOM = (el) => {
     el.classList.add(KEY);
+    el.classList.add(`theme-${this.colorTheme}`);
     el.insertAdjacentHTML('beforeEnd', markup(this));
 
     // Cache DOM nodes
@@ -51,6 +70,7 @@ class Terminal {
       command: container.querySelector('.command'),
       input: container.querySelector('.command .input'),
       prompt: container.querySelector('.command .prompt'),
+      el, // Store reference to main element for theme switching
     };
   }
 
@@ -176,9 +196,58 @@ class Terminal {
     this.onInputCallback = callback;
   }
 
-  output(html = '&nbsp;') {
+  // Output raw HTML without any processing (useful for pre-formatted HTML content)
+  outputHTML(html = '&nbsp;') {
     this.DOM.output.insertAdjacentHTML('beforeEnd', `<span>${html}</span>`);
+    this.scrollDown();
+  }
+
+  output(html = '&nbsp;', type = null) {
+    let processedHtml = html;
+    
+    // Process colors if enabled
+    if (this.contextualColors && typeof html === 'string') {
+      // Handle specific message types first
+      if (type && ['error', 'success', 'warning', 'info'].includes(type)) {
+        processedHtml = colorizeMessageType(html, type, this.colorTheme);
+      }
+      // Then apply contextual coloring
+      else {
+        // First process ANSI codes, then contextual coloring
+        processedHtml = ansiToHtml(html);
+        if (processedHtml === html) { // Only apply contextual if no ANSI codes were processed
+          processedHtml = contextualColorize(processedHtml, this.colorTheme);
+        }
+      }
+    } else if (typeof html === 'string') {
+      // If colors are disabled, still process ANSI codes to avoid showing raw escape sequences
+      processedHtml = ansiToHtml(html);
+      if (processedHtml === html) {
+        // No ANSI codes found, escape HTML to prevent injection
+        processedHtml = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+    }
+    
+    this.DOM.output.insertAdjacentHTML('beforeEnd', `<span>${processedHtml}</span>`);
     this.resetCommand();
+  }
+
+  // Output JSON with syntax highlighting
+  outputJSON(obj) {
+    if (!this.contextualColors) {
+      this.output(JSON.stringify(obj, null, 2));
+      return;
+    }
+    this.output(colorizeJSON(obj, this.colorTheme));
+  }
+
+  // Output command results with contextual coloring
+  outputCommand(text) {
+    if (!this.contextualColors) {
+      this.output(text);
+      return;
+    }
+    this.output(colorizeCommandOutput(text, this.colorTheme));
   }
 
   setPrompt(prompt = this.shell.prompt) {
@@ -188,6 +257,48 @@ class Terminal {
     DOM.command.classList.remove('idle');
     DOM.prompt.innerHTML = `${prompt}${separator}`;
     DOM.input.focus();
+  }
+
+  // Color utility methods
+  colorize(text, color, bgColor) {
+    if (!this.contextualColors) return text;
+    return colorize(text, color, bgColor);
+  }
+
+  // Convenience methods for message types
+  error(text) {
+    this.output(text, 'error');
+  }
+
+  success(text) {
+    this.output(text, 'success');
+  }
+
+  warning(text) {
+    this.output(text, 'warning');
+  }
+
+  info(text) {
+    this.output(text, 'info');
+  }
+
+  // Method to change color theme
+  setColorTheme(theme) {
+    if (COLOR_THEMES[theme]) {
+      // Remove old theme class
+      this.DOM.el.classList.remove(`theme-${this.colorTheme}`);
+      
+      // Set new theme
+      this.colorTheme = theme;
+      
+      // Add new theme class
+      this.DOM.el.classList.add(`theme-${this.colorTheme}`);
+    }
+  }
+
+  // Method to toggle contextual coloring
+  setContextualColors(enable) {
+    this.contextualColors = enable;
   }
 }
 

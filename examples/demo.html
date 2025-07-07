@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebTerminal Color Demo</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        
+        #terminal-container {
+            width: 800px;
+            height: 500px;
+            margin: 50px auto;
+            border: 2px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .demo-info {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-info">
+        <h1>WebTerminal Contextual Color Demo</h1>
+        <p>This WebTerminal now features intelligent contextual coloring that automatically highlights different types of content:</p>
+        <ul>
+            <li><strong>Numbers</strong> (integers, floats, hex, binary) - <span style="color: #f39c12;">Orange</span></li>
+            <li><strong>Strings</strong> (quoted text) - <span style="color: #2ecc71;">Green</span></li>
+            <li><strong>Booleans</strong> (true/false, yes/no, etc.) - <span style="color: #e74c3c;">Red</span></li>
+            <li><strong>URLs</strong> and file paths - <span style="color: #3498db;">Blue</span> / <span style="color: #9b59b6;">Purple</span></li>
+            <li><strong>Commands</strong> and keywords - <span style="color: #f1c40f;">Yellow</span> / <span style="color: #e67e22;">Orange</span></li>
+            <li><strong>Variables</strong> and identifiers - <span style="color: #9b59b6;">Purple</span></li>
+        </ul>
+        
+        <h3>Try these commands:</h3>
+        <ul>
+            <li><code>colors demo</code> - Comprehensive color showcase</li>
+            <li><code>colors off</code> - Disable contextual coloring</li>
+            <li><code>colors on</code> - Enable contextual coloring</li>
+            <li><code>theme dark</code> - Switch to dark theme</li>
+            <li><code>theme light</code> - Switch to light theme</li>
+            <li><code>ls</code> - Colored directory listing</li>
+            <li><code>json</code> - JSON syntax highlighting</li>
+            <li><code>env</code> - Environment variables</li>
+            <li><code>ps</code> - Process list</li>
+            <li><code>help</code> - Show all available commands</li>
+        </ul>
+        
+        <p><strong>Type anything with numbers, strings, URLs, or file paths to see contextual coloring in action!</strong></p>
+    </div>
+    
+    <div id="terminal-container">
+        <div id="web-terminal"></div>
+    </div>
+
+    <!-- Load the built WebTerminal library -->
+    <script src="../dist/web-terminal.js"></script>
+    <script>
+        // Create terminal with contextual colors enabled
+        const terminal = new WebTerminal({
+            container: 'web-terminal',
+            welcome: false, // Disable default welcome to set custom one
+            colors: true,   // Enable contextual coloring
+            colorTheme: 'light', // Color theme (light or dark)
+            commands: {
+                // Example custom command with contextual coloring
+                demo: (term) => {
+                    term.info('=== Contextual Coloring Demo ===');
+                    term.output('Mixed content: The file "/path/to/config.json" contains 42 settings with value "enabled"=true');
+                    term.output('API call: GET https://api.example.com/users/123 returned status 200');
+                    term.output('Variables: $HOME=/Users/john, PORT=3000, DEBUG=false');
+                    term.success('Contextual coloring automatically detects and colors different content types!');
+                },
+                
+                // Simulate an ls command with colored output
+                ls: (terminal, parameters) => {
+                    const files = [
+                        'drwxr-xr-x  5 user  staff   160B Mar 15 10:30 src/',
+                        'drwxr-xr-x  3 user  staff    96B Mar 15 09:20 images/',
+                        '-rw-r--r--  1 user  staff  1.2KB Mar 15 09:45 package.json',
+                        '-rw-r--r--  1 user  staff   523B Mar 15 09:45 README.md',
+                        '-rw-r--r--  1 user  staff   156B Mar 15 09:45 .gitignore',
+                        '-rwxr-xr-x  1 user  staff  2.1KB Mar 15 10:15 build.sh',
+                        '-rw-r--r--  1 user  staff   890B Mar 15 10:20 index.html',
+                    ];
+                    
+                    // Output each file on a separate line for proper coloring
+                    files.forEach(file => {
+                        terminal.outputCommand(file);
+                    });
+                },
+
+                // Example JSON command
+                json: (terminal, parameters) => {
+                    const exampleData = {
+                        user: {
+                            id: 12345,
+                            name: "John Doe",
+                            email: "john@example.com",
+                            active: true,
+                            roles: ["admin", "developer"],
+                            lastLogin: null,
+                            preferences: {
+                                theme: "dark",
+                                notifications: true,
+                                autoSave: false
+                            }
+                        },
+                        stats: {
+                            totalLogins: 247,
+                            averageSessionTime: 45.5,
+                            lastIpAddress: "192.168.1.100"
+                        }
+                    };
+                    
+                    terminal.outputJSON(exampleData);
+                },
+
+                // Environment variables example
+                env: (terminal, parameters) => {
+                    const envVars = [
+                        'PATH=/usr/local/bin:/usr/bin:/bin',
+                        'HOME=/Users/john',
+                        'USER=john',
+                        'SHELL=/bin/zsh',
+                        'NODE_ENV=development',
+                        'PORT=3000',
+                        'DEBUG=true',
+                        'API_KEY=abc123def456',
+                        'DATABASE_URL=postgresql://localhost:5432/myapp'
+                    ];
+                    
+                    envVars.forEach(envVar => {
+                        terminal.output(envVar);
+                    });
+                },
+
+                // Process list example
+                ps: (terminal, parameters) => {
+                    const processes = [
+                        'PID   PPID  CPU  MEM  COMMAND',
+                        '1234  1     2.1  1.5  node server.js',
+                        '5678  1234  0.8  2.3  chrome --type=renderer',
+                        '9012  1     0.2  0.5  /usr/bin/ssh user@server.com',
+                        '3456  1     1.4  3.2  python app.py --port=8000',
+                        '7890  3456  0.1  0.3  grep -r "function" src/',
+                    ];
+                    
+                    // Output each process on a separate line for proper coloring
+                    processes.forEach((process, index) => {
+                        if (index === 0) {
+                            terminal.info(process); // Header in info color
+                        } else {
+                            terminal.outputCommand(process);
+                        }
+                    });
+                },
+                
+                // Rainbow command
+                rainbow: (term) => {
+                    if (term.contextualColors) {
+                        // Use colorize function for better color handling
+                        const rainbowText = 
+                            term.colorize('R', '#ff0000') +  // Red
+                            term.colorize('A', '#ff7f00') +  // Orange  
+                            term.colorize('I', '#ffff00') +  // Yellow
+                            term.colorize('N', '#00ff00') +  // Green
+                            term.colorize('B', '#0000ff') +  // Blue
+                            term.colorize('O', '#4b0082') +  // Indigo
+                            term.colorize('W', '#9400d3');   // Violet
+                        
+                        term.output(rainbowText);
+                    } else {
+                        term.output('Colors are disabled!');
+                    }
+                },
+                
+                // Example with ANSI codes
+                ansi: (term) => {
+                    term.output('Testing color methods:');
+                    term.output('');
+                    
+                    // Use the terminal's built-in color functions
+                    term.output('Using terminal.colors API:');
+                    term.output(term.colors.red('Red text'));
+                    term.output(term.colors.green('Green text'));
+                    term.output(term.colors.bold(term.colors.blue('Bold blue text')));
+                    term.output(term.colors.underline(term.colors.magenta('Underlined magenta')));
+                    
+                    term.output('');
+                    term.output('Using terminal.colorize API:');
+                    // For background colors, we'll use colorize function
+                    term.output(term.colorize('White text on red background', '#ffffff', '#ff0000'));
+                    term.output(term.colorize('Yellow text on blue background', '#ffff00', '#0000ff'));
+                    
+                    term.output('');
+                    term.output('Combining styles:');
+                    term.output(term.colors.bold(term.colors.red('Bold Red')) + ' and ' + 
+                              term.colors.italic(term.colors.green('Italic Green')));
+                }
+            }
+        });
+        
+        // Add custom welcome message using terminal color methods
+        terminal.output('Welcome to the ' + terminal.colorize('Contextually Colored', '#27ae60') + ' Web Terminal!');
+        terminal.output('Try typing: ' + terminal.colors.bold('colors demo') + ' or ' + terminal.colors.bold('help') + ' to get started.');
+    </script>
+</body>
+</html>
