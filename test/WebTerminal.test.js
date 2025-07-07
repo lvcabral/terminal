@@ -1,4 +1,4 @@
-import WebTerminal from './WebTerminal';
+import WebTerminal from '../src/WebTerminal';
 
 global.MutationObserver = class {
   constructor(callback) {}
@@ -106,15 +106,10 @@ describe('WebTerminal', () => {
   describe('Color functionality', () => {
     it('should support disabling colors', () => {
       const term = new WebTerminal({ colors: false });
-      expect(term.enableColors).toBe(false);
+      expect(term.contextualColors).toBe(false);
     });
 
     it('should support enabling colors by default', () => {
-      const term = new WebTerminal();
-      expect(term.enableColors).toBe(true);
-    });
-
-    it('should support contextual colors by default', () => {
       const term = new WebTerminal();
       expect(term.contextualColors).toBe(true);
     });
@@ -124,14 +119,18 @@ describe('WebTerminal', () => {
       expect(term.colorTheme).toBe('dark');
     });
 
+    it('should default to light theme', () => {
+      const term = new WebTerminal();
+      expect(term.colorTheme).toBe('light');
+    });
+
     it('should output colored text when colors enabled', () => {
       const term = new WebTerminal({ colors: true });
       // Just test that the method completes without error
       expect(() => term.output('Number: 42')).not.toThrow();
       
-      // Test that the contextual colorization function works
-      const colorizedOutput = term.enableColors;
-      expect(colorizedOutput).toBe(true);
+      // Test that the contextual colorization is enabled
+      expect(term.contextualColors).toBe(true);
     });
 
     it('should support message types', () => {
@@ -145,9 +144,43 @@ describe('WebTerminal', () => {
 
     it('should toggle colors at runtime', () => {
       const term = new WebTerminal({ colors: true });
-      expect(term.enableColors).toBe(true);
-      term.setColors(false);
-      expect(term.enableColors).toBe(false);
+      expect(term.contextualColors).toBe(true);
+      term.setContextualColors(false);
+      expect(term.contextualColors).toBe(false);
+    });
+
+    it('should apply theme CSS classes', () => {
+      const term = new WebTerminal({ colorTheme: 'light' });
+      expect(term.DOM.el.classList.contains('theme-light')).toBe(true);
+    });
+
+    it('should switch theme CSS classes', () => {
+      const term = new WebTerminal({ colorTheme: 'light' });
+      expect(term.DOM.el.classList.contains('theme-light')).toBe(true);
+      
+      term.setColorTheme('dark');
+      expect(term.DOM.el.classList.contains('theme-dark')).toBe(true);
+      expect(term.DOM.el.classList.contains('theme-light')).toBe(false);
+    });
+
+    it('should expose color utility functions', () => {
+      const term = new WebTerminal();
+      expect(typeof term.colors).toBe('object');
+      expect(typeof term.colors.red).toBe('function');
+      expect(typeof term.colors.bold).toBe('function');
+      expect(typeof term.colorize).toBe('function');
+    });
+
+    it('should have working color utility functions', () => {
+      const term = new WebTerminal();
+      const redText = term.colors.red('test');
+      expect(redText).toContain('\x1b[31m');
+      expect(redText).toContain('test');
+      expect(redText).toContain('\x1b[0m');
+      
+      const colorizedText = term.colorize('test', '#ff0000');
+      expect(colorizedText).toContain('color: #ff0000');
+      expect(colorizedText).toContain('test');
     });
   });
 });

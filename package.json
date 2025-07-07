@@ -1,6 +1,6 @@
 {
   "name": "@lvcabral/terminal",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A simple and lightweight Javascript web browser terminal",
   "keywords": [
     "terminal",

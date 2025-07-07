@@ -1,6 +1,6 @@
 # Simple Web Terminal
 
-[![Version 0.1.0](https://img.shields.io/badge/Version-0.1.0-blue.svg)](https://github.com/lvcabral/terminal/releases/tag/v0.1.0)
+[![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://github.com/lvcabral/terminal/releases/tag/v1.0.0)
 [![NPM Version](https://img.shields.io/npm/v/%40lvcabral%2Fterminal)](https://www.npmjs.com/package/@lvcabral/terminal)
 [![GitHub](https://img.shields.io/github/license/lvcabral/terminal)](./LICENSE)
 
@@ -67,6 +67,55 @@ This is a custom command of web terminal.
 Custom Prompt >
 ```
 
+## Color Support
+
+WebTerminal includes sophisticated colored output with contextual highlighting that automatically detects and colorizes different types of content - similar to syntax highlighting in modern code editors.
+
+### Quick Start
+
+```js
+// Create terminal with colors enabled (default)
+const terminal = new WebTerminal({
+  colors: true,        // Enable contextual coloring
+  colorTheme: 'light'  // Color theme: 'light' or 'dark'
+});
+```
+
+### Key Features
+
+- **Contextual Coloring** - Automatic detection of numbers, strings, booleans, URLs, file paths, commands, and more
+- **Multiple Themes** - Light and dark color schemes  
+- **Message Types** - Built-in error, success, warning, and info styling with icons
+- **JSON Syntax Highlighting** - Automatic formatting for JSON objects
+- **ANSI Support** - Standard terminal escape sequences
+- **Runtime Controls** - Toggle colors and themes on-the-fly
+
+### Example Usage
+
+```js
+// Automatic contextual coloring
+terminal.output('Server running on port 3000 with debug=true');
+
+// Message types with icons  
+terminal.success('File saved successfully!');
+terminal.error('Connection failed');
+
+// JSON highlighting
+terminal.outputJSON({name: "app", version: "1.0.0"});
+
+// Built-in commands
+> colors demo    # Show color examples
+> theme dark     # Switch to dark theme
+
+// Demo commands (available in examples)
+> ls             # Directory listing (in demo files)
+> json           # JSON example (in demo files)
+```
+
+**📖 For complete color documentation, see [`docs/colors.md`](docs/colors.md)**
+
+**🎨 For live examples, see [`examples/`](examples/) folder**
+
 ## Methods
 
 ### clear
@@ -117,6 +166,55 @@ terminal.setPrompt('user @ web');
 ```bash
 user @ web >
 ```
+
+## Development
+
+### Getting Started
+
+```bash
+# Install dependencies
+yarn install
+
+# Run tests
+yarn test
+
+# Build the project  
+yarn build
+```
+
+### Project Structure
+
+```text
+terminal/
+├── src/                    # Source code
+│   ├── WebTerminal.js     # Main terminal class
+│   ├── WebTerminal.css    # Terminal styles
+│   ├── index.js           # Entry point
+│   └── modules/           # Modular components
+├── docs/                  # Documentation
+│   ├── colors.md          # Color system guide
+│   ├── testing.md         # Testing documentation
+│   └── development.md     # Development guide
+├── test/                  # Test files
+├── examples/              # Demo files and examples
+└── dist/                  # Built files
+```
+
+### Documentation
+
+- **📖 [Color System Guide](docs/colors.md)** - Comprehensive color features documentation
+- **🧪 [Testing Guide](docs/testing.md)** - Test setup, running tests, and writing new tests  
+- **⚙️ [Development Guide](docs/development.md)** - Architecture, contributing, and advanced topics
+- **🔄 [Compatibility Guide](docs/compatibility.md)** - Version compatibility and migration information
+
+### Testing
+
+The project includes comprehensive test coverage for:
+
+- Core terminal functionality
+- Color system and contextual highlighting
+- Command processing and custom commands
+- DOM manipulation and event handling
 
 ## License
 
