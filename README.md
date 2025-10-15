@@ -1,6 +1,5 @@
 # Simple Web Terminal
 
-[![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://github.com/lvcabral/terminal/releases/tag/v1.0.0)
 [![NPM Version](https://img.shields.io/npm/v/%40lvcabral%2Fterminal)](https://www.npmjs.com/package/@lvcabral/terminal)
 [![GitHub](https://img.shields.io/github/license/lvcabral/terminal)](./LICENSE)
 
