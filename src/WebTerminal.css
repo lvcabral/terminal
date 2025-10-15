@@ -25,22 +25,22 @@
 .WebTerm output .color-bright-white { color: #ffffff !important; }
 
 /* Light theme ANSI colors - darker, more readable on light background */
-.WebTerm.theme-light output .color-black { color: #2c3e50 !important; }
-.WebTerm.theme-light output .color-red { color: #c0392b !important; }
-.WebTerm.theme-light output .color-green { color: #27ae60 !important; }
-.WebTerm.theme-light output .color-yellow { color: #d68910 !important; }
-.WebTerm.theme-light output .color-blue { color: #2980b9 !important; }
-.WebTerm.theme-light output .color-magenta { color: #8e44ad !important; }
-.WebTerm.theme-light output .color-cyan { color: #17a2b8 !important; }
-.WebTerm.theme-light output .color-white { color: #f8f9fa !important; }
-.WebTerm.theme-light output .color-bright-black { color: #6c757d !important; }
-.WebTerm.theme-light output .color-bright-red { color: #dc3545 !important; }
-.WebTerm.theme-light output .color-bright-green { color: #28a745 !important; }
-.WebTerm.theme-light output .color-bright-yellow { color: #ffc107 !important; }
-.WebTerm.theme-light output .color-bright-blue { color: #007bff !important; }
-.WebTerm.theme-light output .color-bright-magenta { color: #6f42c1 !important; }
-.WebTerm.theme-light output .color-bright-cyan { color: #20c997 !important; }
-.WebTerm.theme-light output .color-bright-white { color: #ffffff !important; }
+.WebTerm.theme-light output .color-black { color: #1a252f !important; }
+.WebTerm.theme-light output .color-red { color: #a62c1f !important; }
+.WebTerm.theme-light output .color-green { color: #1e7e34 !important; }
+.WebTerm.theme-light output .color-yellow { color: #b87503 !important; }
+.WebTerm.theme-light output .color-blue { color: #1c5d8a !important; }
+.WebTerm.theme-light output .color-magenta { color: #6c2d91 !important; }
+.WebTerm.theme-light output .color-cyan { color: #117a8b !important; }
+.WebTerm.theme-light output .color-white { color: #d0d0d0 !important; }
+.WebTerm.theme-light output .color-bright-black { color: #495057 !important; }
+.WebTerm.theme-light output .color-bright-red { color: #bd2130 !important; }
+.WebTerm.theme-light output .color-bright-green { color: #1e7e34 !important; }
+.WebTerm.theme-light output .color-bright-yellow { color: #d39e00 !important; }
+.WebTerm.theme-light output .color-bright-blue { color: #0056b3 !important; }
+.WebTerm.theme-light output .color-bright-magenta { color: #5a32a3 !important; }
+.WebTerm.theme-light output .color-bright-cyan { color: #138496 !important; }
+.WebTerm.theme-light output .color-bright-white { color: #e9ecef !important; }
 
 .WebTerm {
   font-family: "Inconsolata", "Courier New", Courier, monospace;
@@ -66,7 +66,7 @@
 /* Light theme */
 .WebTerm.theme-light {
   background-color: #f8f9fa;
-  color: #2c3e50;
+  color: #1a252f;
 }
 
 .WebTerm.theme-light .container ::selection {
@@ -75,7 +75,7 @@
 }
 
 .WebTerm.theme-light output span:not([class*="color-"]):not([class*="bg-"]) {
-  color: #2c3e50;
+  color: #1a252f;
 }
 
 .WebTerm .container {
@@ -171,7 +171,7 @@
 /* Theme-specific prompt colors */
 .WebTerm.theme-light .prompt,
 .WebTerm.theme-light a {
-  color: #2c3e50;
+  color: #1a252f;
 }
 
 .WebTerm.theme-dark .prompt,
