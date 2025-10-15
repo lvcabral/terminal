@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebTerminal Examples</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 5px;
+        }
+
+        .header .version {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro {
+            margin-bottom: 35px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .intro p {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .intro p:last-child {
+            margin-bottom: 0;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .example-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .example-card:hover {
+            border-color: #667eea;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .example-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .example-card h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .example-card .icon {
+            font-size: 1.5rem;
+        }
+
+        .example-card p {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .example-card .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .footer {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .footer p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🖥️ WebTerminal Examples</h1>
+            <p>Interactive demonstrations of WebTerminal features</p>
+            <p class="version">A simple and lightweight Javascript web browser terminal</p>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <p><strong>Welcome!</strong> Explore these interactive examples to see WebTerminal in action.</p>
+                <p>Each demo showcases different features and capabilities of the terminal library.</p>
+            </div>
+
+            <div class="examples-grid">
+                <a href="basic-demo.html" class="example-card">
+                    <h3><span class="icon">📝</span> Basic Demo</h3>
+                    <p>Simple example showing basic terminal functionality with custom commands and light theme.</p>
+                    <span class="badge">Beginner Friendly</span>
+                </a>
+
+                <a href="demo.html" class="example-card">
+                    <h3><span class="icon">🎨</span> Color Demo</h3>
+                    <p>Comprehensive demonstration showcasing all contextual coloring features including ANSI codes, URLs, file paths, and more.</p>
+                    <span class="badge">Full Featured</span>
+                </a>
+
+                <a href="theme-demo.html" class="example-card">
+                    <h3><span class="icon">🌓</span> Theme Comparison</h3>
+                    <p>Side-by-side comparison of light and dark themes with automated demonstrations.</p>
+                    <span class="badge">Theme Preview</span>
+                </a>
+
+                <a href="test-theme-change.html" class="example-card">
+                    <h3><span class="icon">🔄</span> Theme Switch Test</h3>
+                    <p>Interactive test page for verifying dynamic theme switching. Add content and watch all existing text update when themes change.</p>
+                    <span class="badge">Interactive</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://github.com/lvcabral/terminal" target="_blank">📦 GitHub Repository</a>
+                <a href="../README.md">📖 Documentation</a>
+                <a href="README.md">📝 Examples README</a>
+            </div>
+            <p>© 2025 Marcelo Lv Cabral • MIT License</p>
+        </div>
+    </div>
+</body>
+</html>

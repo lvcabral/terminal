@@ -21,21 +21,21 @@ export const ANSI_COLORS = {
 // Color themes for different content types
 export const COLOR_THEMES = {
   light: {
-    number: '#d35400',      // Dark orange for numbers (readable on light bg)
-    string: '#27ae60',      // Dark green for strings  
-    boolean: '#c0392b',     // Dark red for booleans
-    null: '#7f8c8d',        // Medium gray for null/undefined
-    url: '#2980b9',         // Dark blue for URLs
-    path: '#8e44ad',        // Dark purple for file paths
-    command: '#f39c12',     // Orange for commands
-    error: '#e74c3c',       // Red for errors
-    success: '#27ae60',     // Dark green for success
-    warning: '#f39c12',     // Orange for warnings
-    info: '#2980b9',        // Dark blue for info
-    prompt: '#2c3e50',      // Dark gray for prompt
-    punctuation: '#7f8c8d', // Medium gray for punctuation
-    keyword: '#d35400',     // Dark orange for keywords
-    variable: '#8e44ad',    // Dark purple for variables
+    number: '#b34700',      // Darker orange for numbers
+    string: '#1e7e34',      // Darker green for strings  
+    boolean: '#a62c1f',     // Darker red for booleans
+    null: '#5a6268',        // Darker gray for null/undefined
+    url: '#1c5d8a',         // Darker blue for URLs
+    path: '#6c2d91',        // Darker purple for file paths
+    command: '#d39e00',     // Darker orange for commands
+    error: '#c82333',       // Darker red for errors
+    success: '#1e7e34',     // Darker green for success
+    warning: '#d39e00',     // Darker orange for warnings
+    info: '#1c5d8a',        // Darker blue for info
+    prompt: '#1a252f',      // Very dark gray for prompt
+    punctuation: '#5a6268', // Darker gray for punctuation
+    keyword: '#b34700',     // Darker orange for keywords
+    variable: '#6c2d91',    // Darker purple for variables
   },
   
   dark: {
