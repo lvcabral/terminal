@@ -2,7 +2,22 @@
 
 This directory contains various example implementations of the WebTerminal.
 
+## Quick Start
+
+View all examples from the **[Examples Index](index.html)** - a visual gallery of all demos.
+
+Or run the development server:
+
+```bash
+# From the project root
+npm start
+```
+
 ## Examples
+
+### [index.html](index.html)
+
+Visual index page with links to all examples and descriptions. Best starting point for exploring the demos.
 
 ### [basic-demo.html](basic-demo.html)
 
@@ -16,24 +31,39 @@ Comprehensive color demonstration showcasing all the contextual coloring feature
 
 Side-by-side comparison of light and dark themes with automated demonstrations.
 
+### [test-theme-change.html](test-theme-change.html)
+
+Interactive test page for verifying that the `setColorTheme()` method correctly updates existing text colors when switching themes. Demonstrates the fix for the issue where only new text would use the new theme colors.
+
 ## Running Examples
 
 Since the examples reference the built file (`../dist/web-terminal.js`), make sure to build the project first:
 
 ```bash
 # From the project root
-yarn build
+npm run build
 ```
 
-Then open any of the HTML files in your browser:
+Then start the development server:
 
 ```bash
-# Using a local server (recommended)
-python -m http.server 8000
-# Then visit http://localhost:8000/examples/
+# Start the server (opens on port 8080)
+npm start
 
-# Or open directly in browser
-open examples/demo.html
+# Then visit http://localhost:8080/examples/
+```
+
+Or open any HTML file directly in your browser:
+
+```bash
+# Or open directly in browser (macOS)
+open examples/index.html
+
+# Linux
+xdg-open examples/index.html
+
+# Windows
+start examples/index.html
 ```
 
 ## What to Try
