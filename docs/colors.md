@@ -42,6 +42,13 @@ The terminal automatically detects and colors different content types:
 | Variables | Purple | `$PATH`, `camelCase`, `snake_case` |
 | Keywords | Orange | `function`, `if`, `for`, `class` |
 | Null values | Gray | `null`, `undefined`, `nil` |
+| Debug text | Muted gray | Free for consumers to use for de-emphasized/debug-level lines |
+| Component refs | Blue | Free for consumers to use for object/component references |
+| Structure markers | Muted gray | Free for consumers to use for structural/debugger markers |
+| Hex values | Purple | Free for consumers to use for hex-formatted values |
+
+The last four rows aren't matched by any built-in pattern — they're semantic color keys in
+`COLOR_THEMES` reserved for consumers to reference from their own [custom patterns](#custom-patterns).
 
 ## Usage Examples
 
@@ -149,6 +156,39 @@ terminal.output(terminal.colors.bold('Bold text'));
 terminal.output(terminal.colors.blue('Blue') + ' and ' + terminal.colors.green('Green'));
 ```
 
+## Custom Patterns
+
+The built-in contextual patterns are tuned for generic OS-console text (URLs, file paths, shell
+command names). Consumers with their own output vocabulary (log levels, a scripting language's
+value syntax, structured markers) can register their own regex-to-color rules instead of, or
+alongside, the built-in set:
+
+```js
+const terminal = new WebTerminal({
+  colors: true,
+  colorTheme: 'dark',
+  customPatterns: [
+    { regex: /\bERROR:/g, color: '#f92672', type: 'error' },
+    { regex: /\bWARN:/g, color: '#fd971f', type: 'warning', priority: 20 },
+  ],
+  useDefaultPatterns: false, // omit to merge with the built-in patterns instead of replacing them
+});
+
+// Colorize a string on demand, independent of output()'s implicit auto-detect path
+const html = terminal.highlight('WARN: disk usage above 90%');
+
+// Replace the pattern set at runtime (e.g. when a theme changes and colors are theme-derived)
+terminal.setCustomPatterns([{ regex: /\bERROR:/g, color: '#c82333', type: 'error' }], false);
+```
+
+Each pattern is `{ regex, color, type?, priority? }`:
+- `regex` — must be given without concern for the `g` flag; it's added automatically if missing.
+- `color` — hex color or CSS color name.
+- `type` — free-form label, only used to look up a default priority when `priority` is omitted.
+- `priority` — optional; on overlapping matches, resolution first sorts by match **start index**,
+  then by `priority` (higher wins) — so keep custom patterns narrowly scoped rather than greedy,
+  since a pattern matching an earlier/longer span always wins regardless of priority.
+
 ## Configuration Options
 
 ```js
@@ -229,3 +269,16 @@ terminal.colorize(text, color, backgroundColor)
 - `text`: Text to colorize
 - `color`: Hex color (e.g., '#ff0000') or CSS color name
 - `backgroundColor`: Optional background color
+
+### Pattern-Based Highlighting
+
+```js
+terminal.highlight(text, type)
+terminal.setCustomPatterns(patterns, useDefaultPatterns)
+```
+
+- `highlight(text, type?)` — runs the contextual/custom pattern colorizer on `text` and returns
+  HTML, independent of `output()`'s implicit auto-detect path. Pass `type` (`'error'`, `'success'`,
+  `'warning'`, or `'info'`) to route through `colorizeMessageType` instead.
+- `setCustomPatterns(patterns, useDefaultPatterns?)` — replaces the instance's custom pattern set
+  (see [Custom Patterns](#custom-patterns)) used by `highlight()` and `output()`'s implicit path.

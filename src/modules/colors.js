@@ -36,6 +36,15 @@ export const COLOR_THEMES = {
     punctuation: '#5a6268', // Darker gray for punctuation
     keyword: '#b34700',     // Darker orange for keywords
     variable: '#6c2d91',    // Darker purple for variables
+    debug: '#767676',       // Muted gray for debug-level output
+    component: '#0969da',   // Blue for object/component references
+    structure: '#6e7781',   // Muted gray for structural/debugger markers
+    hex: '#8250df',         // Purple for hex values
+    timestamp: '#0b7285',   // Teal/cyan for log timestamps
+    tag: '#bf5b04',         // Orange for bracketed log tags
+    boolTrue: '#0000ff',    // Blue for the `true` boolean literal
+    invalid: '#6f42c1',     // Purple for the `invalid` literal
+    comment: '#008000',     // Green for source comments
   },
   
   dark: {
@@ -54,6 +63,15 @@ export const COLOR_THEMES = {
     punctuation: '#f8f8f2', // Off-white
     keyword: '#f92672',     // Bright pink
     variable: '#66d9ef',    // Cyan
+    debug: '#9099a1',       // Muted gray for debug-level output
+    component: '#79c0ff',   // Blue for object/component references
+    structure: '#8b949e',   // Muted gray for structural/debugger markers
+    hex: '#c297ff',         // Purple for hex values
+    timestamp: '#66d9ef',   // Cyan for log timestamps
+    tag: '#fd971f',         // Orange for bracketed log tags
+    boolTrue: '#569cd6',    // Blue for the `true` boolean literal
+    invalid: '#d2a8ff',     // Purple for the `invalid` literal
+    comment: '#6a9955',     // Green for source comments
   }
 };
 
@@ -188,20 +206,26 @@ export const colors = {
  * Contextually colorize content based on its type and context
  * @param {string} text - Text to colorize
  * @param {string} theme - Color theme to use ('light' or 'dark')
+ * @param {object} [options] - Extra pattern configuration
+ * @param {Array<{regex: RegExp, color: string, type?: string, priority?: number}>} [options.customPatterns] -
+ *   Additional (or, with useDefaultPatterns: false, exclusive) pattern rules to colorize with.
+ * @param {boolean} [options.useDefaultPatterns=true] - Whether to include the built-in generic
+ *   pattern set alongside customPatterns. Set to false to colorize using only customPatterns.
  * @returns {string} HTML with colored spans
  */
-export function contextualColorize(text, theme = 'light') {
+export function contextualColorize(text, theme = 'light', options = {}) {
   if (!text || typeof text !== 'string') return text;
-  
+
   // Skip colorizing if text already contains HTML tags
   if (/<[^>]*>/g.test(text)) {
     return text;
   }
-  
+
+  const { customPatterns = null, useDefaultPatterns = true } = options;
   const colors = COLOR_THEMES[theme] || COLOR_THEMES.light;
-  
+
   // Patterns for different content types
-  const patterns = [
+  const defaultPatterns = [
     // URLs (must come before file paths)
     {
       regex: /(https?:\/\/[^\s<>"{}|\\^`[\]]+)/g,
@@ -280,15 +304,28 @@ export function contextualColorize(text, theme = 'light') {
       type: 'variable'
     }
   ];
-  
+
+  let patterns;
+  if (Array.isArray(customPatterns) && !useDefaultPatterns) {
+    patterns = customPatterns;
+  } else if (Array.isArray(customPatterns) && useDefaultPatterns) {
+    patterns = [...defaultPatterns, ...customPatterns];
+  } else {
+    patterns = defaultPatterns;
+  }
+
   let result = text;
   const replacements = [];
-  
+
   // Find all matches and store them with their positions
   patterns.forEach(pattern => {
     let match;
-    const regex = new RegExp(pattern.regex.source, pattern.regex.flags);
-    
+    // Force the 'g' flag: exec() below relies on it to advance lastIndex between iterations.
+    // Without it (e.g. a caller-supplied customPatterns regex missing 'g'), exec() would never
+    // advance and the loop would spin forever on the first match.
+    const flags = pattern.regex.flags.includes('g') ? pattern.regex.flags : pattern.regex.flags + 'g';
+    const regex = new RegExp(pattern.regex.source, flags);
+
     while ((match = regex.exec(text)) !== null) {
       replacements.push({
         start: match.index,
@@ -296,8 +333,13 @@ export function contextualColorize(text, theme = 'light') {
         original: match[0],
         replacement: `<span style="color: ${pattern.color}">${match[0]}</span>`,
         type: pattern.type,
-        priority: getPriority(pattern.type)
+        priority: typeof pattern.priority === 'number' ? pattern.priority : getPriority(pattern.type)
       });
+      // Guard against zero-length matches (e.g. a custom pattern with an all-optional body)
+      // looping forever at the same index.
+      if (match[0].length === 0) {
+        regex.lastIndex += 1;
+      }
     }
   });
   

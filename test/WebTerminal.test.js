@@ -60,6 +60,13 @@ describe("WebTerminal", () => {
     expect(document.querySelector("output span:last-child").innerHTML).toEqual("Hello World");
   });
 
+  it("when outputHTML()", () => {
+    const term = new WebTerminal();
+
+    expect(() => term.outputHTML("plain&nbsp;text")).not.toThrow();
+    expect(document.querySelector("output span:last-child").innerHTML).toEqual("plain&nbsp;text");
+  });
+
   it("when prompt()", () => {
     const term = new WebTerminal();
 
@@ -211,6 +218,61 @@ describe("WebTerminal", () => {
       // Verify the color in the style attribute changed
       const updatedStyle = firstSpan.getAttribute("style");
       expect(updatedStyle).not.toBe(initialStyle);
+    });
+
+    it("gates colorize() on contextualColors (no longer shadowed by the constructor)", () => {
+      const term = new WebTerminal({ colors: false });
+      const result = term.colorize("test", "#ff0000");
+      expect(result).toBe("test");
+      expect(result).not.toContain("color:");
+    });
+  });
+
+  describe("custom patterns", () => {
+    it("accepts customPatterns/useDefaultPatterns at construction", () => {
+      const term = new WebTerminal({
+        customPatterns: [{ regex: /\bBRS\b/g, color: "#0969da", type: "component" }],
+        useDefaultPatterns: false,
+      });
+      expect(term.customPatterns.length).toBe(1);
+      expect(term.useDefaultPatterns).toBe(false);
+    });
+
+    it("highlight() colorizes using the configured patterns regardless of contextualColors", () => {
+      const term = new WebTerminal({
+        colors: false,
+        customPatterns: [{ regex: /\bBRS\b/g, color: "#0969da", type: "component" }],
+        useDefaultPatterns: false,
+      });
+      const result = term.highlight("Engine: BRS");
+      expect(result).toContain("color: #0969da");
+    });
+
+    it("highlight() with a type routes to colorizeMessageType", () => {
+      const term = new WebTerminal();
+      const result = term.highlight("Something failed", "error");
+      expect(result).toContain("❌");
+      expect(result).toContain("color:");
+    });
+
+    it("setCustomPatterns() updates the pattern set used by later highlight() calls", () => {
+      const term = new WebTerminal({ useDefaultPatterns: false });
+      expect(term.highlight("Engine: BRS")).not.toContain("color:");
+
+      term.setCustomPatterns([{ regex: /\bBRS\b/g, color: "#0969da", type: "component" }], false);
+      const result = term.highlight("Engine: BRS");
+      expect(result).toContain("color: #0969da");
+    });
+
+    it("output() colorizes print-level text using instance customPatterns", () => {
+      const term = new WebTerminal({
+        customPatterns: [{ regex: /\bBRS\b/g, color: "#0969da", type: "component" }],
+        useDefaultPatterns: false,
+      });
+      term.output("Engine: BRS");
+      expect(document.querySelector("output span:last-child").innerHTML).toContain(
+        "color: #0969da"
+      );
     });
   });
 });

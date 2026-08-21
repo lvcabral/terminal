@@ -31,6 +31,8 @@ class Terminal {
       autoFocus = true,
       colors: contextualColors = true,
       colorTheme = "light",
+      customPatterns = [],
+      useDefaultPatterns = true,
     } = props;
     this.commands = Object.assign({}, COMMANDS, commands);
     this.history = localStorage[KEY] ? JSON.parse(localStorage[KEY]) : [];
@@ -41,8 +43,9 @@ class Terminal {
     this.autoFocus = autoFocus;
     this.contextualColors = contextualColors;
     this.colorTheme = colorTheme;
+    this.customPatterns = Array.isArray(customPatterns) ? customPatterns : [];
+    this.useDefaultPatterns = useDefaultPatterns !== false;
     this.colors = colors; // Expose color utility functions
-    this.colorize = colorize; // Expose colorize function
 
     const el = document.getElementById(container);
     if (el) {
@@ -172,6 +175,14 @@ class Terminal {
     if (DOM.input.scrollIntoView) DOM.input.scrollIntoView();
   };
 
+  // Scroll the output into view without touching the command line's value/classes (unlike
+  // resetCommand). The output MutationObserver (see addListeners) already does this on every
+  // mutation, so this is mainly for callers invoking outputHTML() outside that observed flow.
+  scrollDown = () => {
+    const { DOM } = this;
+    if (DOM.input && DOM.input.scrollIntoView) DOM.input.scrollIntoView();
+  };
+
   clear() {
     this.DOM.output.innerHTML = "";
     if (!this.state.idle) {
@@ -220,7 +231,10 @@ class Terminal {
         processedHtml = ansiToHtml(html);
         if (processedHtml === html) {
           // Only apply contextual if no ANSI codes were processed
-          processedHtml = contextualColorize(processedHtml, this.colorTheme);
+          processedHtml = contextualColorize(processedHtml, this.colorTheme, {
+            customPatterns: this.customPatterns,
+            useDefaultPatterns: this.useDefaultPatterns,
+          });
         }
       }
     } else if (typeof html === "string") {
@@ -252,6 +266,22 @@ class Terminal {
       return;
     }
     this.output(colorizeCommandOutput(text, this.colorTheme));
+  }
+
+  // Run pattern-based colorization on arbitrary text and return HTML, independent of
+  // output()'s implicit auto-detect path (which skips processing entirely whenever the input
+  // already contains an HTML tag, and is gated on this.contextualColors). Useful for callers
+  // that want to pre-colorize a line themselves (e.g. before wrapping it in another span) and
+  // then hand the result to output()/outputHTML().
+  highlight(text, type = null) {
+    if (typeof text !== "string") return text;
+    if (type && ["error", "success", "warning", "info"].includes(type)) {
+      return colorizeMessageType(text, type, this.colorTheme);
+    }
+    return contextualColorize(text, this.colorTheme, {
+      customPatterns: this.customPatterns,
+      useDefaultPatterns: this.useDefaultPatterns,
+    });
   }
 
   setPrompt(prompt = this.shell.prompt) {
@@ -336,6 +366,12 @@ class Terminal {
   // Method to toggle contextual coloring
   setContextualColors(enable) {
     this.contextualColors = enable;
+  }
+
+  // Replace the custom pattern set used by contextualColorize()/highlight()/output()
+  setCustomPatterns(patterns = [], useDefaultPatterns = this.useDefaultPatterns) {
+    this.customPatterns = Array.isArray(patterns) ? patterns : [];
+    this.useDefaultPatterns = useDefaultPatterns !== false;
   }
 }
 

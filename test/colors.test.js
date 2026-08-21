@@ -52,12 +52,52 @@ describe('Color System', () => {
     it('should use different themes', () => {
       const defaultResult = contextualColorize('Number: 42', 'default');
       const darkResult = contextualColorize('Number: 42', 'dark');
-      
+
       expect(defaultResult).toContain('42');
       expect(darkResult).toContain('42');
       // Both should have color styling but potentially different colors
       expect(defaultResult).toContain('color:');
       expect(darkResult).toContain('color:');
+    });
+  });
+
+  describe('contextualColorize with customPatterns', () => {
+    it('merges customPatterns with the built-in set by default', () => {
+      // Note: contextualColorize skips processing entirely if the text already contains a raw
+      // HTML tag, so custom patterns (like real consumers) are written against pre-escaped
+      // markers (e.g. &lt;Component: roArray&gt;) rather than literal angle brackets.
+      const result = contextualColorize('Port: 3000 &lt;Component: roArray&gt;', 'light', {
+        customPatterns: [{ regex: /&lt;Component: ro\w+&gt;/g, color: '#0969da', type: 'component' }],
+      });
+      expect(result).toContain('3000'); // built-in number pattern still applied
+      expect(result).toContain('color: #0969da');
+    });
+
+    it('uses only customPatterns when useDefaultPatterns is false', () => {
+      const result = contextualColorize('Visit https://example.com', 'light', {
+        customPatterns: [{ regex: /\binvalid\b/g, color: '#5a6268', type: 'null' }],
+        useDefaultPatterns: false,
+      });
+      // The built-in URL pattern must not run
+      expect(result).not.toContain('color:');
+      expect(result).toBe('Visit https://example.com');
+    });
+
+    it('does not hang on a customPatterns regex missing the g flag', () => {
+      const result = contextualColorize('invalid invalid', 'light', {
+        customPatterns: [{ regex: /invalid/, color: '#5a6268', type: 'null' }],
+        useDefaultPatterns: false,
+      });
+      expect((result.match(/color:/g) || []).length).toBe(2);
+    });
+
+    it('lets an explicit priority override the type-based default in an overlap', () => {
+      // Both patterns match at the same start index; without an explicit priority the
+      // built-in 'number' type (priority 8) would win over a plain custom pattern (priority 0).
+      const result = contextualColorize('42', 'light', {
+        customPatterns: [{ regex: /\d+/g, color: '#ff00ff', type: 'custom', priority: 100 }],
+      });
+      expect(result).toContain('color: #ff00ff');
     });
   });
 

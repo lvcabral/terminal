@@ -83,7 +83,8 @@ const terminal = new WebTerminal({
 ### Key Features
 
 - **Contextual Coloring** - Automatic detection of numbers, strings, booleans, URLs, file paths, commands, and more
-- **Multiple Themes** - Light and dark color schemes  
+- **Custom Patterns** - Register your own regex-to-color rules to replace or extend the built-in set (see [`docs/colors.md`](docs/colors.md#custom-patterns))
+- **Multiple Themes** - Light and dark color schemes
 - **Message Types** - Built-in error, success, warning, and info styling with icons
 - **JSON Syntax Highlighting** - Automatic formatting for JSON objects
 - **ANSI Support** - Standard terminal escape sequences
@@ -95,7 +96,7 @@ const terminal = new WebTerminal({
 // Automatic contextual coloring
 terminal.output('Server running on port 3000 with debug=true');
 
-// Message types with icons  
+// Message types with icons
 terminal.success('File saved successfully!');
 terminal.error('Connection failed');
 
@@ -166,6 +167,27 @@ terminal.setPrompt('user @ web');
 user @ web >
 ```
 
+### highlight
+
+Colorizes arbitrary text on demand using the terminal's contextual/custom patterns, independent of
+`output()`'s implicit auto-detect path. See [Custom Patterns](docs/colors.md#custom-patterns).
+
+```js
+terminal.outputHTML(terminal.highlight('WARN: disk usage above 90%'));
+```
+
+### setCustomPatterns
+
+Replaces the pattern set `highlight()` and `output()` colorize with. See
+[Custom Patterns](docs/colors.md#custom-patterns).
+
+```js
+terminal.setCustomPatterns(
+  [{ regex: /\bERROR:/g, color: '#c82333', type: 'error' }],
+  false // useDefaultPatterns
+);
+```
+
 ## Development
 
 ### Getting Started
@@ -177,7 +199,7 @@ yarn install
 # Run tests
 yarn test
 
-# Build the project  
+# Build the project
 yarn build
 ```
 
@@ -202,7 +224,7 @@ terminal/
 ### Documentation
 
 - **📖 [Color System Guide](docs/colors.md)** - Comprehensive color features documentation
-- **🧪 [Testing Guide](docs/testing.md)** - Test setup, running tests, and writing new tests  
+- **🧪 [Testing Guide](docs/testing.md)** - Test setup, running tests, and writing new tests
 - **⚙️ [Development Guide](docs/development.md)** - Architecture, contributing, and advanced topics
 - **🔄 [Compatibility Guide](docs/compatibility.md)** - Version compatibility and migration information
 
