@@ -45,6 +45,7 @@ export const COLOR_THEMES = {
     boolTrue: '#0000ff',    // Blue for the `true` boolean literal
     invalid: '#6f42c1',     // Purple for the `invalid` literal
     comment: '#008000',     // Green for source comments
+    debugLabel: '#8250df',  // Purple for a line-leading "DEBUG:" label
   },
   
   dark: {
@@ -72,6 +73,7 @@ export const COLOR_THEMES = {
     boolTrue: '#569cd6',    // Blue for the `true` boolean literal
     invalid: '#d2a8ff',     // Purple for the `invalid` literal
     comment: '#6a9955',     // Green for source comments
+    debugLabel: '#c297ff',  // Purple for a line-leading "DEBUG:" label
   }
 };
 
